@@ -1,0 +1,55 @@
+@mixin inactive {
+  box-shadow: 0px -1px 3px 2px white inset, 1px 1px 3px 1px #988F99 inset;
+}
+
+@mixin active {
+  box-shadow: 0px -1px 3px 2px white, 1px 1px 3px 1px #988F99;
+}
+
+@mixin hover {
+  box-shadow: 0px -3px 5px 4px white, 3px 3px 5px 3px #988F99;
+}
+
+.button {
+  background: #87d8ca;
+  border-radius: 40px;
+  border-style: unset;
+  cursor: pointer;
+  margin: 5px;
+  outline: none;
+  padding: 10px 5px;
+  transform: translate(0, 0);
+  transition: background 200ms ease-in-out, transform 200ms ease-in-out;
+  width: 100%;
+
+
+  @include active;
+
+  &:hover:not(:disabled) {
+    animation: shadowHover 500ms;
+    transform: translate(-2px, -2px);
+
+    @include hover;
+  }
+
+  &:disabled {
+    background: gainsboro;
+    cursor: not-allowed;
+    filter: blur(1px);
+    transform: translate(2px, 2px);
+
+    @include inactive;
+  }
+}
+
+
+@keyframes shadowHover {
+
+  from {
+    @include active;
+  }
+
+  to {
+    @include hover;
+  }
+}
