@@ -1,4 +1,4 @@
-import React, {FC, ChangeEvent, useCallback} from 'react';
+import React, { FC, ChangeEvent, useCallback } from 'react';
 import cn from 'classnames';
 import * as style from './input.module.scss';
 
@@ -13,14 +13,18 @@ interface IPropsInput {
 }
 
 export const Input: FC<IPropsInput> = (props: IPropsInput) => {
-    const {className, onChange, onEnter, disabled, value, label, icon, ...otherProps} = props;
+    const { className, onChange, onEnter, disabled, value, label, icon, ...otherProps } = props;
 
-    const handleOnEnter = useCallback(event => {
-        if (event.key === 'Enter' && onEnter) {
-            onEnter(event);
-        }
-    }, [onEnter]);
+    const handleOnEnter = useCallback(
+        (event) => {
+            if (event.key === 'Enter' && onEnter) {
+                onEnter(event);
+            }
+        },
+        [onEnter]
+    );
 
+    /* eslint-disable */
     return (
         <div className={cn(style.wrapper, className)}>
             {icon && <div className={style.icon}>{icon}</div>}
@@ -32,7 +36,7 @@ export const Input: FC<IPropsInput> = (props: IPropsInput) => {
                 onChange={onChange}
                 onKeyDown={handleOnEnter}
             />
-            {label && <label className={style.label}>{label}</label>}
+            {!!label && <label className={style.label}>{label}</label>}
         </div>
-    )
+    );
 };
