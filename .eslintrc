@@ -9,17 +9,12 @@
   "plugins": ["prettier", "react", "react-hooks", "@typescript-eslint"],
   "parser": "@typescript-eslint/parser",
   "globals": {
-    "Cypress": true,
-    "cy": true,
-    "context": true,
-    "assert": true,
-    "afterEach": true,
-    "beforeEach": true,
-    "document": true,
     "window": true,
     "localStorage": true
   },
   "rules": {
+    "no-use-before-define": "off",
+    "@typescript-eslint/no-use-before-define": ["error"],
     "prettier/prettier": ["error"],
     "no-console": ["error", { "allow": ["log"] }],
     "react/sort-comp": "off",

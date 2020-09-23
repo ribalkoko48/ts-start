@@ -14,12 +14,20 @@ module.exports = (_, { mode }) => {
         entry: './src/index.tsx',
 
         resolve: {
-            extensions: ['.ts', '.tsx', '.js'],
+            modules: ['node_modules', 'src'],
+            extensions: ['.ts', '.tsx', '.js', '.jsx'],
         },
 
         output: {
             path: path.join(__dirname, '/dist'),
             filename: 'bundle.min.js',
+            publicPath: '/'
+        },
+
+        devServer: {
+            historyApiFallback: true,
+            compress: true,
+            port: 3000
         },
 
         devtool: 'source-map',
@@ -31,11 +39,16 @@ module.exports = (_, { mode }) => {
                     use: ['file-loader'],
                 },
                 {
-                    test: /\.tsx?$/,
+                    test: /\.(js|jsx)?$/,
+                    loader: 'babel-loader',
+                },
+
+                {
+                    test: /\.(ts|tsx)?$/,
                     loader: 'awesome-typescript-loader',
                 },
                 {
-                    test: /\.scss?$/,
+                    test: /\.(scss|css)?$/,
                     exclude: /\.module.scss$/,
                     use: ['style-loader', 'css-loader', 'sass-loader', 'postcss-loader'],
                 },

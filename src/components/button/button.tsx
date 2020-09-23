@@ -22,3 +22,9 @@ export const Button: FC<IPropsInput> = (props: IPropsInput) => {
         </button>
     );
 };
+
+Button.defaultProps = {
+    onClick: undefined,
+    disabled: undefined,
+    className: undefined,
+};
