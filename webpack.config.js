@@ -11,7 +11,7 @@ module.exports = (_, { mode }) => {
     const devMode = mode === 'development';
 
     return {
-        entry: './src/index.tsx',
+        entry: './src/index.js',
 
         resolve: {
             modules: ['node_modules', 'src'],
@@ -92,6 +92,12 @@ module.exports = (_, { mode }) => {
             }),
             new webpack.DefinePlugin({
                 VERSION: JSON.stringify(packageJson.version),
+                PUBLIC_URL: devMode
+                    ? JSON.stringify('http://localhost:3000')
+                    : JSON.stringify(''),
+                API_ROOT: devMode
+                    ? JSON.stringify('http://localhost:4002')
+                    : JSON.stringify('http://10.10.10.104:8011/ABC.MFR.ProductCatalog.Service')
             }),
             new HtmlWebpackPlugin({
                 template: './public/index.html',

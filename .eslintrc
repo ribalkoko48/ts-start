@@ -9,8 +9,10 @@
   "plugins": ["prettier", "react", "react-hooks", "@typescript-eslint"],
   "parser": "@typescript-eslint/parser",
   "globals": {
+    "document": true,
     "window": true,
-    "localStorage": true
+    "localStorage": true,
+    "API_ROOT": true
   },
   "rules": {
     "no-use-before-define": "off",
