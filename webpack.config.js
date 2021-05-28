@@ -1,33 +1,35 @@
 /* eslint-disable */
 const path = require('path');
 const webpack = require('webpack');
-const CleanWebpackPlugin = require('clean-webpack-plugin').CleanWebpackPlugin;
+const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
+const TsconfigPathsPlugin = require('tsconfig-paths-webpack-plugin');
 const packageJson = require('./package.json');
 
-module.exports = (_, { mode }) => {
+module.exports = (env, { mode }) => {
     const devMode = mode === 'development';
 
     return {
-        entry: './src/index.js',
+        entry: path.resolve(__dirname, 'src', 'index.tsx'),
 
         resolve: {
             modules: ['node_modules', 'src'],
             extensions: ['.ts', '.tsx', '.js', '.jsx'],
+            plugins: [new TsconfigPathsPlugin({ configFile: './tsconfig.json' })],
         },
 
         output: {
             path: path.join(__dirname, '/dist'),
-            filename: 'bundle.min.js',
-            publicPath: '/'
+            filename: 'bundle.[hash].min.js',
+            publicPath: '/',
         },
 
         devServer: {
             historyApiFallback: true,
             compress: true,
-            port: 3000
+            port: 3000,
         },
 
         devtool: 'source-map',
@@ -35,17 +37,19 @@ module.exports = (_, { mode }) => {
         module: {
             rules: [
                 {
-                    test: /\.(png|jpe?g|gif)$/i,
-                    use: ['file-loader'],
+                    test: /\.(png|jpe?g|gif|woff|woff2|eot|ttf)$/i,
+                    use: [{
+                        options: {
+                            name: '[name].[ext]',
+                            outputPath: 'assets/',
+                        },
+                        loader: 'file-loader',
+                    }],
                 },
                 {
-                    test: /\.(js|jsx)?$/,
-                    loader: 'babel-loader',
-                },
-
-                {
-                    test: /\.(ts|tsx)?$/,
-                    loader: 'awesome-typescript-loader',
+                    test: /\.(ts|tsx|js|jsx)?$/,
+                    exclude: /node_modules/,
+                    use: [{ loader: 'ts-loader', options: { transpileOnly: true } }],
                 },
                 {
                     test: /\.(scss|css)?$/,
@@ -66,7 +70,7 @@ module.exports = (_, { mode }) => {
                             },
                         },
                         {
-                            loader: 'css-loader',
+                            loader: 'css-loader?url=false',
                             options: {
                                 modules: {
                                     namedExport: true,
@@ -84,7 +88,9 @@ module.exports = (_, { mode }) => {
         plugins: [
             new CleanWebpackPlugin(),
             new CopyWebpackPlugin({
-                patterns: [{ from: 'public', to: 'public' }],
+                patterns: [
+                    { from: 'public/favicon.ico', to: 'public/favicon.ico' },
+                ],
             }),
             new MiniCssExtractPlugin({
                 filename: devMode ? '[name].css' : '[name].[hash].css',
@@ -92,12 +98,6 @@ module.exports = (_, { mode }) => {
             }),
             new webpack.DefinePlugin({
                 VERSION: JSON.stringify(packageJson.version),
-                PUBLIC_URL: devMode
-                    ? JSON.stringify('http://localhost:3000')
-                    : JSON.stringify(''),
-                API_ROOT: devMode
-                    ? JSON.stringify('http://localhost:4002')
-                    : JSON.stringify('http://10.10.10.104:8011/ABC.MFR.ProductCatalog.Service')
             }),
             new HtmlWebpackPlugin({
                 template: './public/index.html',
